@@ -313,8 +313,6 @@ class ByieldBot {
     
     if (isNaN(this.suiAmount) || isNaN(this.transactionCount) || this.suiAmount <= 0 || this.transactionCount <= 0) {
       logger.error("Invalid input values!");
-      return>Hello
-
       return;
     }
     
