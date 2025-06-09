@@ -31,20 +31,20 @@ const logger = {
   balance: (msg) => console.log(`${colors.cyan}[💰] ${msg}${colors.reset}`),
   explorer: (msg) => console.log(`${colors.yellow}[🔗] ${msg}${colors.reset}`),
   banner: () => {
-  console.log(`${colors.cyan}${colors.bold}`);
-  console.log(`
+    console.log(`${colors.cyan}${colors.bold}`);
+    console.log(`
  █████╗ ██████╗ ██████╗     ███╗   ██╗ ██████╗ ██████╗ ███████╗
 ██╔══██╗██╔══██╗██╔══██╗    ████╗  ██║██╔═══██╗██╔══██╗██╔════╝
 ███████║██║  ██║██████╔╝    ██╔██╗ ██║██║   ██║██║  ██║█████╗
 ██╔══██║██║  ██║██╔══██╗    ██║╚██╗██║██║   ██║██║  ██║██╔══╝
 ██║  ██║██████╔╝██████╔╝    ██║ ╚████║╚██████╔╝██████╔╝███████╗
 ╚═╝  ╚═╝╚═════╝ ╚═════╚═╝     ╚═╝  ╚═══╝ ╚═════╝ ╚═════╝ ╚══════╝
-  `);
-  console.log(`---------------------------------------------`);
-  console.log(`         Byield Auto Bot - ADB NODE          `);
-  console.log(`---------------------------------------------${colors.reset}`);
-  console.log();
-}
+    `);
+    console.log(`---------------------------------------------`);
+    console.log(`         Byield Auto Bot - ADB NODE          `);
+    console.log(`---------------------------------------------${colors.reset}`);
+    console.log();
+  }
 };
 
 const BYIELD_PACKAGE = "0x4995e309e990a6a93224153108b26bf79197b234c51db6447bbae10b431c42fb";
@@ -58,6 +58,8 @@ class ByieldBot {
     this.keys = [];
     this.proxies = [];
     this.currentProxyIndex = 0;
+    this.suiAmount = null;
+    this.transactionCount = null;
   }
 
   loadKeys() {
@@ -301,13 +303,18 @@ class ByieldBot {
 
     await this.displayAllBalances();
 
-    const suiAmount = parseFloat(readlineSync.question('Enter SUI amount per transaction: '));
-    const transactionCount = parseInt(readlineSync.question('Enter number of transactions per account: '));
+    // Only prompt for input on first run
+    if (!this.suiAmount || !this.transactionCount) {
+      this.suiAmount = parseFloat(readlineSync.question('Enter SUI amount per transaction: '));
+      this.transactionCount = parseInt(readlineSync.question('Enter number of transactions per account: '));
+    }
 
     const delayBetweenTx = 10000;
     
-    if (isNaN(suiAmount) || isNaN(transactionCount) || suiAmount <= 0 || transactionCount <= 0) {
+    if (isNaN(this.suiAmount) || isNaN(this.transactionCount) || this.suiAmount <= 0 || this.transactionCount <= 0) {
       logger.error("Invalid input values!");
+      return>Hello
+
       return;
     }
     
@@ -322,12 +329,12 @@ class ByieldBot {
       
       let successCount = 0;
       
-      for (let txIndex = 0; txIndex < transactionCount; txIndex++) {
-        logger.loading(`Account ${accountIndex + 1}: Transaction ${txIndex + 1}/${transactionCount}`);
+      for (let txIndex = 0; txIndex < this.transactionCount; txIndex++) {
+        logger.loading(`Account ${accountIndex + 1}: Transaction ${txIndex + 1}/${this.transactionCount}`);
         
         const success = await this.executeSwap(
           this.keys[accountIndex], 
-          suiAmount, 
+          this.suiAmount, 
           accountIndex
         );
         
@@ -335,13 +342,13 @@ class ByieldBot {
           successCount++;
         }
 
-        if (txIndex < transactionCount - 1) {
+        if (txIndex < this.transactionCount - 1) {
           logger.info(`Waiting 10 seconds before next transaction...`);
           await new Promise(resolve => setTimeout(resolve, delayBetweenTx));
         }
       }
       
-      logger.success(`Account ${accountIndex + 1} completed: ${successCount}/${transactionCount} successful transactions`);
+      logger.success(`Account ${accountIndex + 1} completed: ${successCount}/${this.transactionCount} successful transactions`);
       console.log();
 
       if (accountIndex < this.keys.length - 1) {
@@ -351,6 +358,11 @@ class ByieldBot {
     
     logger.success("All transactions completed!");
     logger.explorer(`View all transactions on: ${EXPLORER_BASE_URL}`);
+    
+    // Schedule next run in 24 hours
+    const TWENTY_FOUR_HOURS = 24 * 60 * 60 * 1000;
+    logger.info(`Scheduling next run in 24 hours...`);
+    setTimeout(() => this.run(), TWENTY_FOUR_HOURS);
   }
 }
 
