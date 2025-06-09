@@ -31,12 +31,20 @@ const logger = {
   balance: (msg) => console.log(`${colors.cyan}[💰] ${msg}${colors.reset}`),
   explorer: (msg) => console.log(`${colors.yellow}[🔗] ${msg}${colors.reset}`),
   banner: () => {
-    console.log(`${colors.cyan}${colors.bold}`);
-    console.log(`---------------------------------------------`);
-    console.log(`  Byield Auto Bot - Airdrop Insiders  `);
-    console.log(`---------------------------------------------${colors.reset}`);
-    console.log();
-  }
+  console.log(`${colors.cyan}${colors.bold}`);
+  console.log(`
+ █████╗ ██████╗ ██████╗     ███╗   ██╗ ██████╗ ██████╗ ███████╗
+██╔══██╗██╔══██╗██╔══██╗    ████╗  ██║██╔═══██╗██╔══██╗██╔════╝
+███████║██║  ██║██████╔╝    ██╔██╗ ██║██║   ██║██║  ██║█████╗
+██╔══██║██║  ██║██╔══██╗    ██║╚██╗██║██║   ██║██║  ██║██╔══╝
+██║  ██║██████╔╝██████╔╝    ██║ ╚████║╚██████╔╝██████╔╝███████╗
+╚═╝  ╚═╝╚═════╝ ╚═════╚═╝     ╚═╝  ╚═══╝ ╚═════╝ ╚═════╝ ╚══════╝
+  `);
+  console.log(`---------------------------------------------`);
+  console.log(`         Byield Auto Bot - ADB NODE          `);
+  console.log(`---------------------------------------------${colors.reset}`);
+  console.log();
+}
 };
 
 const BYIELD_PACKAGE = "0x4995e309e990a6a93224153108b26bf79197b234c51db6447bbae10b431c42fb";
