@@ -21,8 +21,7 @@ Automated trading bot for Byield protocol on Sui testnet that performs SUI to nB
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/vikitoshi/Byield-Auto-Bot.git
-   cd Byield-Auto-Bot
+   git clone https://github.com/airdropbomb/Byield-Auto-Bot.git && cd Byield-Auto-Bot
    ```
 
 2. **Install dependencies**
